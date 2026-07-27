@@ -25,7 +25,7 @@
             bindings = <
 &kp GRAVE                 &kp N1    &kp N2    &kp N3    &kp N4  &kp N5          &kp N6  &kp N7   &kp N8     &kp N9   &kp N0     &kp EQL
 &mt LS(LC(LA(LGUI))) TAB  &kp Q     &kp W     &kp E     &kp R   &kp T           &kp Y   &kp U    &kp I      &kp O    &kp P      &kp MINUS
-&mt LCTL ESC              &kp A     &kp S     &kp D     &kp F   &kp G           &kp H   &kp J    &kp K      &kp L    &kp SEMI   &kp APOS
+&lt 2 TAB    &kp A     &kp S     &kp D     &kp F   &kp G           &kp H   &kp J    &kp K      &kp L    &kp SEMI   &lt 2 APOS
 &lsft_capword             &kp Z     &kp X     &kp C     &kp V   &kp B           &kp N   &kp M    &kp COMMA  &kp DOT  &kp FSLH   &rsft_capword
 &mt LCTL BKSP &mt LALT SPACE &mt LGUI ENTER  &lt 1 ESC &kp LC(LA(LGUI)) &studio_unlock   &studio_unlock &kp RC(RA(RGUI)) &lt 1 ESC  &mt RGUI ENTER &mt RALT SPACE &mt RCTL BKSP
             >;
@@ -45,8 +45,8 @@
 
         layer_2 {
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
+&trans  &kp C_BRI_DN  &kp C_BRI_INC  &kp C_AC_DESKTOP_SHOW_ALL_WINDOWS  &trans  &trans      &trans   &kp C_PREV &kp C_PP &kp C_NEXT &kp MUTE &kp C_VOL_UP
+&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &kp C_VOL_DN
 &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans

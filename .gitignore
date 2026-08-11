@@ -1,2 +1,4 @@
 
 .zmk/
+vendor_config/
+firmware/

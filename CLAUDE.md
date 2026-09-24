@@ -13,6 +13,10 @@ why. Read this before suggesting keymap changes.
 - Has not started using the board for real yet. Keeps falling back to the
   laptop keyboard and trackpad, mostly for navigation and switching spaces.
 - Prefers editing the keymap here and flashing over using ZMK Studio.
+- Writing is central to their studies. Wants fast, fluent computer use:
+  hopping between VS Code windows, and taking notes in Obsidian while reading.
+- Flashed the 2026-09-23 firmware (guard, one-shot Shift, space switching) but
+  hadn't tested it as of 2026-09-24. Not fully sold on the layout yet.
 
 ## Hardware
 
@@ -24,7 +28,12 @@ why. Read this before suggesting keymap changes.
   keyboard, not an upgrade.
 - The inner-column top keys (positions 53, 54) are rotary encoder pushes, not
   buttons. They're bad to press, so don't put anything important on them.
-- Has a display (`CONFIG_ZMK_DISPLAY=y`) showing the layer name.
+- A 128x32 SSD1306 OLED on each half. Disabled in firmware on 2026-09-24
+  (`CONFIG_ZMK_DISPLAY=n`): it only showed the layer name and awake/connected
+  status, and it's the biggest power draw while awake.
+- Deep sleep after 30 min idle (`CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000`).
+  Waking is a reboot plus Bluetooth reconnect: a few seconds, and the waking
+  keypress is lost. It was 5 min, which caused slow wakes after short pauses.
 
 ## Thumb cluster geometry (the main ergonomic problem)
 
@@ -52,13 +61,13 @@ The right half mirrors this (positions 59, 58, 57, 56).
   into `haili58-layouts.dtsi`. It's cosmetic: it only changes how ZMK Studio
   draws the board.
 
-## Current keymap (as of 2026-09-23)
+## Current keymap (as of 2026-09-24)
 
 Base layer, both halves mirrored:
 
 | Key | Tap | Hold |
 |---|---|---|
-| Row-1 outer pinky (L) | Tab | Hyper (⇧⌃⌥⌘) |
+| Row-1 outer pinky (L) | Tab | none (plain key, holdable) |
 | Row-2 outer pinky (L) | Esc | Layer 1 (Nav) |
 | Row-2 outer pinky (R) | `'` | Layer 1 (Nav) |
 | Row-3 outer pinky | Shift | double-tap = Caps Word |
@@ -74,6 +83,11 @@ Encoders: left = volume, right = up/down.
 Thumb mod-taps use `&tml` / `&tmr`, which have a positional guard: the
 modifier only fires if the next key is on the other half. Same-thumb rolls
 stay plain taps. Use the opposite hand's modifier (right thumb Cmd + left `T`).
+Exceptions: the left thumbs also trigger on `` ` `` (0) and Tab (12), so
+one-handed Cmd+Tab and Cmd+` work. Flavor is `balanced` (pressing and
+releasing another key while the thumb is held makes it a modifier right away)
+with `require-prior-idle-ms = 150` (a thumb press within 150 ms of typing is
+always a tap, which stops misfires mid-word).
 
 Layer 1 (Nav): right-hand `H J K L` = arrows, `U`/`I` = PgDn/PgUp,
 `Y`/`O` = previous/next space (`Ctrl+Cmd+←/→`, used by the owner's space
@@ -87,9 +101,14 @@ uses it. Leave the contents alone but don't design around it.
 - **Spotlight and deleted words while typing.** `&mt` defaults to
   `hold-preferred`, so any overlap made the thumb key a modifier. Rolling Space
   into Backspace gave `Option+Backspace` (delete word), and Backspace into Space
-  gave `Cmd+Space` (Spotlight). Fixed on 2026-09-23 with the positional guard
-  plus `tap-preferred`. This does not stop the thumb physically pressing two
-  keys at once; that part is geometry.
+  gave `Cmd+Space` (Spotlight). Fixed on 2026-09-23 with the positional
+  guard. This does not stop the thumb physically pressing two keys at once;
+  that part is geometry.
+- **Cmd+Tab slow and unreliable** (2026-09-24). Three causes: `tap-preferred`
+  made Cmd wait the full 200 ms; the guard turned left-thumb Cmd + left Tab
+  into Backspace + Tab; and Tab was itself a hold-tap (Hyper). Fixed by
+  switching to `balanced` + `require-prior-idle-ms`, adding Tab and `` ` `` as
+  same-side exceptions, and making Tab plain.
 - **Couldn't hold Tab** (Monkeytype restart). Both Tabs were hold-taps. The
   duplicate is gone now. Setting Monkeytype's quick restart to Esc or Tab is
   the easy fix.
@@ -108,6 +127,10 @@ uses it. Leave the contents alone but don't design around it.
 - **Shift is the priority comfort problem.** The pinky Shift is a far 1u reach.
   One-shot Shift on the inner-column keys is being trialled alongside it. Keep
   whichever wins and remove the other.
+- **Cmd stays on thumb 1, not under Enter** (2026-09-24). Thumb 3 is a far
+  key, and the guard applies wherever Cmd sits. Left-hand shortcuts (`T W R C
+  V`) use the right thumb's Cmd. If that still annoys after a week, add those
+  letters to `SWITCH_L` and rely on `require-prior-idle-ms`.
 - **`quick-tap-ms` not wanted.** The owner doesn't need Backspace repeat.
 - **Use vim motions for text navigation.** Layer 1 is for everything else.
 - **No `\frac` style macros in firmware.** Characters belong in firmware,
@@ -119,13 +142,10 @@ uses it. Leave the contents alone but don't design around it.
 
 ## Backlog (not applied)
 
-- Row-1 pinky as plain `&kp TAB`. Hyper is unused, so this would make Tab
-  holdable.
 - Parens on Nav: `[ ] ( ) \` instead of `[ ] { } \`. `{ }` come from Shift, and
   `( )` are missing from the layer.
 - F6–F10 appear twice on Nav.
 - Delete isn't bound anywhere.
-- `require-prior-idle-ms` if modifiers still misfire during fast typing.
 - Keycap and hardware ideas: a taller cap (SA/MT3) on the live thumb keys for
   a landmark, heavier springs on thumb switches if hot-swap, and pulling caps
   off any thumb key set to `&none`.

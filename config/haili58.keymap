@@ -77,9 +77,25 @@
             bindings = <
 &trans  &kp C_BRI_DN  &kp C_BRI_INC  &kp C_AC_DESKTOP_SHOW_ALL_WINDOWS  &trans  &trans      &trans   &kp C_PREV &kp C_PP &kp C_NEXT &kp C_MUTE &kp C_VOL_UP
 &trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_CLR  &bootloader      &trans   &studio_unlock &trans &trans &soft_off &kp C_VOL_DN
+&trans  &trans  &trans  &trans  &trans  &tog 3      &trans   &trans &trans &trans &trans &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
 &trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans   &trans &trans &trans &trans &trans
+            >;
+        };
+
+        // Windows gaming, toggled with Media+G. Left half: plain keys with no
+        // mod-taps, so holding Space/Shift/Esc never turns into a modifier or
+        // layer, and no Win key under the left thumb. Right thumbs swap Cmd
+        // and Ctrl so Mac shortcut muscle memory (thumb 1 + C/V) means Ctrl
+        // on Windows. Media+G (thumb 4 stays &trans) turns it back off.
+        game_layer {
+            display-name = "Game";
+            bindings = <
+&trans     &trans     &trans    &trans  &trans     &trans      &trans  &trans  &trans  &trans          &trans  &trans
+&trans     &trans     &trans    &trans  &trans     &trans      &trans  &trans  &trans  &trans          &trans  &trans
+&kp ESC    &trans     &trans    &trans  &trans     &trans      &trans  &trans  &trans  &trans          &trans  &trans
+&kp LSHFT  &trans     &trans    &trans  &trans     &trans      &trans  &trans  &trans  &trans          &trans  &trans
+&kp LCTRL  &kp SPACE  &kp LALT  &trans  &kp LSHFT  &trans      &trans  &trans  &trans  &tmr RGUI ENTER &trans  &tmr RCTL BKSP
             >;
         };
     };

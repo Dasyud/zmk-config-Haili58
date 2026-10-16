@@ -13,6 +13,9 @@ why. Read this before suggesting keymap changes.
 - Has not started using the board for real yet. Keeps falling back to the
   laptop keyboard and trackpad, mostly for navigation and switching spaces.
 - Prefers editing the keymap here and flashing over using ZMK Studio.
+- Mac tools: uses AltTab and a space switcher. Dislikes Spotlight and prefers
+  PowerToys-style launchers; suggested Raycast, Homerow and Vimium
+  (2026-09-24). Also uses Windows (gaming).
 - Writing is central to their studies. Wants fast, fluent computer use:
   hopping between VS Code windows, and taking notes in Obsidian while reading.
 - Flashed the 2026-09-23 firmware (guard, one-shot Shift, space switching) but
@@ -30,7 +33,10 @@ why. Read this before suggesting keymap changes.
   buttons. They're bad to press, so don't put anything important on them.
 - A 128x32 SSD1306 OLED on each half. Disabled in firmware on 2026-09-24
   (`CONFIG_ZMK_DISPLAY=n`): it only showed the layer name and awake/connected
-  status, and it's the biggest power draw while awake.
+  status, and it's the biggest power draw while awake. With the driver gone,
+  a screen keeps showing its last frozen image until the half is fully
+  power-cycled (power switch off with USB unplugged); flashing alone doesn't
+  clear it.
 - Deep sleep after 30 min idle (`CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000`).
   Waking is a reboot plus Bluetooth reconnect: a few seconds, and the waking
   keypress is lost. It was 5 min, which caused slow wakes after short pauses.
@@ -49,11 +55,16 @@ Left thumbs from outside in, from `haili58-layouts.dtsi`:
 The right half mirrors this (positions 59, 58, 57, 56).
 
 - The thumb moves in an arc and its pad faces sideways, but the cluster is flat
-  and unangled. The owner finds thumbs 1 and 2 comfortable, and 3 and 4 far.
+  and unangled. Early on the owner found thumbs 1 and 2 comfortable and 3 and 4
+  far. After real use (2026-09-24) their thumb actually rests on thumb 3
+  (Enter), and Backspace on thumb 1 feels hard to reach.
 - Thumb 4 sits almost directly above thumb 3 (25 apart in x, 100 in y, keys
   are 100 wide). Reaching up for thumb 4 drags the thumb across thumb 3.
 - A thumb pad (~20 mm) is wider than a 1u key (~19 mm), so adjacent thumb keys
   get pressed together. With XDA there's nothing to feel between them.
+- 2026-09-24: trying tenting with two folded towels, and the left forearm
+  started hurting a lot. Advised stopping the towels, going flat or low, and
+  getting it checked if the pain persists or tingles. Ask about it next time.
 - Tenting helps a bit. Still to try: palm rests about level with the home row,
   and splaying each half outward a few degrees so the thumb's arc runs along
   the row.
@@ -61,7 +72,7 @@ The right half mirrors this (positions 59, 58, 57, 56).
   into `haili58-layouts.dtsi`. It's cosmetic: it only changes how ZMK Studio
   draws the board.
 
-## Current keymap (as of 2026-09-24)
+## Current keymap (as of 2026-10-15)
 
 Base layer, both halves mirrored:
 
@@ -94,7 +105,17 @@ Layer 1 (Nav): right-hand `H J K L` = arrows, `U`/`I` = PgDn/PgUp,
 switching app). F1–F15 and brackets `[ ] { } \` on the bottom row.
 
 Layer 2: brightness, media, Bluetooth, bootloader, soft off. The owner never
-uses it. Leave the contents alone but don't design around it.
+uses it. Leave the contents alone but don't design around it. Exception:
+`G` (position 29) = `&tog 3`, the Game layer toggle.
+
+Layer 3 (Game, added 2026-10-15, for Windows gaming): toggled on/off with
+Layer 2 + `G`. Everything is `&trans` except: Esc (24) plain, left pinky
+Shift (36) plain, inner one-shot Shift (52) plain Shift, left thumbs 1/2/3 =
+plain Ctrl / Space / Alt (no Win key on the left, Alt+Tab one-handed), right
+thumbs swap Cmd and Ctrl (59 = Backspace/Ctrl, 57 = Enter/Win) so thumb 1
++ C/V is copy/paste on Windows. Thumb 4 stays `&trans` so Layer 2 + `G`
+still turns it off. No indicator (OLEDs are off), and a toggle doesn't
+survive deep sleep: after a 30 min idle the board wakes on the base layer.
 
 ## History of problems and fixes
 
@@ -127,9 +148,29 @@ uses it. Leave the contents alone but don't design around it.
 - **Shift is the priority comfort problem.** The pinky Shift is a far 1u reach.
   One-shot Shift on the inner-column keys is being trialled alongside it. Keep
   whichever wins and remove the other.
-- **Cmd stays on thumb 1, not under Enter** (2026-09-24). Thumb 3 is a far
-  key, and the guard applies wherever Cmd sits. Left-hand shortcuts (`T W R C
-  V`) use the right thumb's Cmd. If that still annoys after a week, add those
+- **Thumb rearrangement deferred** (2026-09-24). Since the thumb rests on
+  thumb 3, two options were offered: (a) thumb 1 Enter/Ctrl, thumb 2
+  Space/Option, thumb 3 Backspace/Cmd (recommended: Backspace is used far more
+  than Enter); (b) only move Cmd under Enter, with Ctrl on thumb 1. The owner
+  wants to wait and see whether their thumbs adapt first. Bring it up again
+  when they report back. Data point, 2026-09-24: hit Enter by accident when
+  reaching for Space, which sent a half-finished message. A key under the
+  resting thumb gets pressed by accident, so whatever goes on thumb 3 should
+  be harmless to hit.
+- **Laptop lid closed** from 2026-09-24; the split is now the main keyboard.
+- **Shift:** not using it much yet; the sticky (one-shot) Shift helps. A
+  D+F / J+K sticky-Shift combo was offered on 2026-09-24; the owner wants to
+  give the current Shifts more time first. The pinky Shift is slow for `?`.
+- **Shortcut technique, not firmware, for Cmd+Tab** (2026-09-24). The owner
+  "waves" shortcuts: they release Cmd before Tab, which `balanced` reads as a
+  tap. Advised: hold the thumb until the other key is up. The same applies to
+  every thumb shortcut. Fallbacks if it doesn't stick: `hold-preferred` (wave
+  works, but some misfires come back, e.g. Backspace then a quick letter
+  gives Cmd+letter), or a plain Cmd key somewhere.
+- **Encoder push (media) may become useful later**, but it's risky because it
+  sits next to Enter.
+- **The guard applies wherever Cmd sits.** Moving Cmd doesn't fix same-hand
+  shortcuts. Left-hand shortcuts (`T W R C V`) use the right thumb's Cmd. If that still annoys after a week, add those
   letters to `SWITCH_L` and rely on `require-prior-idle-ms`.
 - **`quick-tap-ms` not wanted.** The owner doesn't need Backspace repeat.
 - **Use vim motions for text navigation.** Layer 1 is for everything else.
@@ -141,6 +182,8 @@ uses it. Leave the contents alone but don't design around it.
   `\ { } [ ]` on the home row and `| _ ^ $ &` below.
 
 ## Backlog (not applied)
+
+- **Combos/chords deferred** until the base layout is mastered.
 
 - Parens on Nav: `[ ] ( ) \` instead of `[ ] { } \`. `{ }` come from Shift, and
   `( )` are missing from the layer.
